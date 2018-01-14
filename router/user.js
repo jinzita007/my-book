@@ -17,6 +17,12 @@ router.get('/user', checkLogin, (req, res) => {
             })
    
 })
+//
+router.get('/check', checkLogin, (req, res) => {
+    if (req.session.user) {
+        return res.json({ status: 3, error: false, message: "已经登录！" })
+    } 
+})
 
 //注册一个用户
 router.post('/user', checkNotLogin, (req, res) => {
@@ -35,22 +41,27 @@ router.post('/user', checkNotLogin, (req, res) => {
 
 //认证信息
 router.post('/login', checkNotLogin, (req, res) => {
-    const sess = req.session;
     const username = req.body.username
     const password = req.body.password
 
     User.findOne({ username: username }, (err, user) => {
         if (err) throw err;
-        
+      
         if (!user) {
             return res.json({ status: 2, error: true, message: '验证失败：账号不存在！' });
         }
+
         if (user.password === password) {
             req.session.user = user.username
             return res.json({ status: 1, error: false, message: '验证成功： 登录成功！' })
-        } else {
+        } 
+
+        if (user.password != password) {
             return res.json({ status: 0, error: true, message: '验证失败：密码不符合！' });
         }
+        
+        
+       
     })
 
 })
