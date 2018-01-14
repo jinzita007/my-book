@@ -14,7 +14,7 @@ export default {
 }
 </script>
 <style>
-#app {
+/*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -23,7 +23,7 @@ export default {
   flex-direction: column;
   justify-content:center;
   align-items:flex-start;
-}
+}*/
 </style>
 
 

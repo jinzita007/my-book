@@ -66,6 +66,7 @@ export default {
 </script>
 <style>
 .mu-card {
+    text-align: center;
     margin: 0 auto;
     width: 50%;
     margin-bottom: 50px;
