@@ -8,7 +8,6 @@ const app = express()
 const index = require('./router/index')
 const book = require('./router/book')
 const user = require('./router/user')
-const upload = require('./router/upload')
 
 mongoose.connect(config.mongodb)
 mongoose.Promise = global.Promise
@@ -20,8 +19,6 @@ app.use(express.static('dist'))
 app.use('/', index)
 
 app.use('/api', book)
-
-app.use('/api', upload)
 
 app.use('/api', user)
 
