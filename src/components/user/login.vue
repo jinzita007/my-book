@@ -60,9 +60,7 @@ export default {
     handleTabChange(val) {
       this.activeTab = val
     },
-    handleActive() {
-      window.alert('tab active')
-    },
+
     checkLogin() {
          //var username = this.username
          //console.log(username)
@@ -94,6 +92,10 @@ export default {
         .then(res => {
             if (res.data.status === 1) {
                 this.toastr.success(res.data.message)
+                this.activeTab = 'tab1'
+                this.username = '',
+                this.email = '',
+                this.password = ''
             } else if (res.data.status === 2) {
                 this.toastr.warning(res.data.message)
             } else if (res.data.status === 0) {
