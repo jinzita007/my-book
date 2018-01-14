@@ -4,8 +4,13 @@
         <div class="ball-spin-fade-loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
       </div>
 <!-- 搜索书名 -->
+
 <div class="list" v-else>
-<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/>
+    
+<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/> 
+    <br>
+    <mu-raised-button @click="logout" label="注销" primary/>
+    
     <!-- 书籍列表 -->
     <mu-table :fixedHeader="true" :showCheckbox="false" >
         <mu-thead>
@@ -98,8 +103,17 @@ created() {
             return book.title.toLowerCase().indexOf(self.search.toLowerCase()) > -1
         })
     }
+    
   },
   methods: {
+    //注销
+    logout() {
+       this.$http.get('/api/logout') 
+       .then(res => {
+           this.toastr.success('注销成功！')
+            this.$router.push('/login')
+       })
+    }, 
       //获取所有书籍方法
       getBooks() {
         setTimeout(() => {
@@ -107,7 +121,8 @@ created() {
           .then(res => {
               console.dir(res.data)
               this.books = res.data
-              this.isLoaingData = false     
+              this.isLoaingData = false  
+              
           })
           .catch(err => {
               this.toastr.error(`${err.message}`, 'ERROR!')
@@ -204,6 +219,7 @@ created() {
                 console.log(err);   
             })
         },
+    
         //删除一个书籍
         removeBook(book) {
             let id = book._id
@@ -222,8 +238,7 @@ created() {
             //console.log(_id);
             //let id = this.book_id
             this.$router.push(`/book/${_id}`)
-    }
-     
+    }   
   }
 }
 </script>
