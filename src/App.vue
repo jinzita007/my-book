@@ -6,6 +6,7 @@
 </template>
 
 <script>
+
 export default {
   data(){
     return {
@@ -24,6 +25,9 @@ export default {
   justify-content:center;
   align-items:flex-start;
 }*/
+#app {
+  text-align: center;
+}
 </style>
 
 
