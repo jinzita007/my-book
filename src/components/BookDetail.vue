@@ -16,10 +16,10 @@
     {{book.introduction}}
   </mu-card-text>
 
-  <mu-card-actions>
+  <!--<mu-card-actions>
     <mu-flat-button label="下载地址" secondary/>
     <mu-flat-button label="购买地址" primary/>
-  </mu-card-actions>
+  </mu-card-actions>-->
   
   <mu-raised-button @click="goBack" primary class="mu-raised-button">返回</mu-raised-button>
 </mu-card>
