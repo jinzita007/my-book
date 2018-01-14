@@ -18,7 +18,7 @@ app.use(session({
     resave: false, // //重新保存
     saveUninitialized: true, // 强制“未初始化”的会话保存到存储
     cookie: {
-        maxAge: 10000 // 设置返回的cookie时效为30秒
+        maxAge: 50000 // 设置返回的cookie时效为30秒
     }
 }))
 

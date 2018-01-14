@@ -13,7 +13,7 @@ import Vodal from 'vodal';
 import "vodal/common.css";
 import "vodal/rotate.css";
 import "./assets/loaders.css"
-
+axios.defaults.withCredentials = true
 Vue.use(MuseUi)
 import router from './router'
 Vue.prototype.$http = axios
@@ -38,8 +38,21 @@ toastr.options = {
   "showMethod": "fadeIn",
   "hideMethod": "fadeOut"
 }
+router.beforeEach((to, from, next) => {
+  //var userInfo = JSON.parse(sessionStorage.getItem('userInfoStorage'));//获取浏览器缓存的用户信息
+  axios.get('/api/user').then(res => {
+    if (res.data.status === 4) {
+      if (to.path == '/login') {//如果是登录页面路径，就直接next()
+        next();
+      } else {//不然就跳转到登录；
+        next('/login');
+      }
+    } else { //如果有就直接到首页咯
+      next();
+    }
+  })
 
-
+});
 
 /* eslint-disable no-new */
 new Vue({
