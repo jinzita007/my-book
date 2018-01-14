@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const config = require('./config/db')
 
 const bodyParser = require('body-parser')
+const session = require('express-session')
 
 const app = express()
 const index = require('./router/index')
