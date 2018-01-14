@@ -16,14 +16,6 @@
     {{book.introduction}}
   </mu-card-text>
 
-
-  <mu-list>
-    <mu-list-item describeText="标准价格" inset>
-    <mu-icon value="chat_bubble" slot="right"/>
-      <p>{{book.price}} 元</p>
-    </mu-list-item>
-  </mu-list>
-
   <mu-card-actions>
     <mu-flat-button label="下载地址" secondary/>
     <mu-flat-button label="购买地址" primary/>
