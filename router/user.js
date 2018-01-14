@@ -21,13 +21,13 @@ router.get('/user', checkLogin, (req, res) => {
 //注册一个用户
 router.post('/user', checkNotLogin, (req, res) => {
     if (!req.body.username || !req.body.password) {
-        res.json({ error: true, message: "请填写用户名或者密码！" })
+        res.json({ status: 0, error: true, message: "请填写用户名或者密码！" })
     } else {
         User.create(req.body, (err, user) => {
             if (err) {
-                return res.json({ error: true, message: "用户名已存在!" })
+                return res.json({ status: 2, error: true, message: "用户名已存在!" })
             } else {
-                res.json({ error: false, message: "用户名创建成功！"})
+                res.json({ status: 1, error: false, message: "用户名创建成功！"})
             } 
         })
     }
@@ -41,15 +41,15 @@ router.post('/login', checkNotLogin, (req, res) => {
 
     User.findOne({ username: username }, (err, user) => {
         if (err) throw err;
-
+        
         if (!user) {
-            return res.status(400).json({ error: true, msg: '验证失败：账号不存在！' });
+            return res.json({ status: 2, error: true, message: '验证失败：账号不存在！' });
         }
         if (user.password === password) {
             req.session.user = user.username
-            return res.json({ error: false, message: '验证成功： 登录成功！' })
+            return res.json({ status: 1, error: false, message: '验证成功： 登录成功！' })
         } else {
-            return res.status(400).json({ error: true, msg: '验证失败：密码不符合！' });
+            return res.json({ status: 0, error: true, message: '验证失败：密码不符合！' });
         }
     })
 
