@@ -9,20 +9,28 @@ const app = express()
 const index = require('./router/index')
 const book = require('./router/book')
 const user = require('./router/user')
-
+// mongoose设置
 mongoose.connect(config.mongodb)
 mongoose.Promise = global.Promise
-
+// session会话
+app.use(session({
+    secret: 'usersession',
+    key: 'usersession',
+    resave: false, // //重新保存
+    saveUninitialized: true, // 强制“未初始化”的会话保存到存储
+    cookie: {
+        maxAge: 10000 // 设置返回的cookie时效为30秒
+    }
+}))
+// URL请求解析
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static('dist'))
-
+// 设置路由
 app.use('/', index)
-
 app.use('/api', book)
-
 app.use('/api', user)
-
+// 开启监听服务
 app.listen(3000,() => {
     console.log('app listening on port 3000.')
     
