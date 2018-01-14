@@ -105,15 +105,15 @@ created() {
         setTimeout(() => {
           this.$http.get('/api/book')
           .then(res => {
-              //console.dir(res.data)
+              console.dir(res.data)
               this.books = res.data
-              this.isLoaingData = false
+              this.isLoaingData = false     
           })
           .catch(err => {
               this.toastr.error(`${err.message}`, 'ERROR!')
               console.log(err);  
           })
-           }, 1500)
+           }, 1000)
        
       },
       // 打开添加书籍modal的方法
