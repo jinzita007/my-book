@@ -1,7 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const config = require('./config/db')
-
 const bodyParser = require('body-parser')
 const session = require('express-session')
 
@@ -22,6 +21,7 @@ app.use(session({
         maxAge: 10000 // 设置返回的cookie时效为30秒
     }
 }))
+
 // URL请求解析
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
