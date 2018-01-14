@@ -1,4 +1,5 @@
 <template>
+<div class="login_main">
 <div class="table">
   <mu-tabs :value="activeTab" @change="handleTabChange">
     <mu-tab value="tab1" title="登录"/>
@@ -28,12 +29,21 @@
   </div>
   
 </div>
+</div>
 
 </template>
 
 <script>
 
 export default {
+   beforeCreate: function () {
+        //console.log('beforeCreate 钩子执行...');
+        this.$http.get('/api/check').then(res => {
+            if (res.data.status === 3) {
+                this.$router.push('/')
+            }
+  })
+      },
   data () {
     return {
             username: '',
@@ -42,9 +52,10 @@ export default {
             emailError: '',
             password: '',
             passwordError: '',
-            activeTab: 'tab1'
+            activeTab: 'tab1',
     }
   },
+
    methods: {
     handleTabChange(val) {
       this.activeTab = val
@@ -55,25 +66,19 @@ export default {
     checkLogin() {
          //var username = this.username
          //console.log(username)
-         this.$http.post('/api/login',{username:this.username,password:this.password},{
-             headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            withCredentials: true
-         })
-         .then(res => {
+         this.$http.post('/api/login',{username:this.username,password:this.password})
+        .then(res => {
              //登录成功 跳转至首页
              if (res.data.status === 1) {
                  this.toastr.success(res.data.message)
-                 this.$router.push(`/`)
-                 //console.log('成功登录！');
+                 this.$router.push('/')
              } else if (res.data.status === 2) {
                  this.toastr.warning(res.data.message)
              } else if (res.data.status === 3){
                  this.toastr.warning(res.data.message)
              } else if (res.data.status === 0) {
                  this.toastr.error(res.data.message)
-             }      
+             }    
          })
          .catch(err => {
              this.toastr.error('登录失败！')
@@ -104,6 +109,7 @@ export default {
 }
 </script>
 <style>
+
 .table {
    position: absolute;
    width: 400px;
