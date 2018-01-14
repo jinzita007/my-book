@@ -34,44 +34,6 @@ router.post('/login', (req, res) => {
     const username = req.body.username
     const password = req.body.password
 
-    /*User.findOne(data).lean().exec((err, user) => {
-        if (err) {
-            return res.json({ error: false })
-        }
-        //检查用户是否匹配
-        if (!user) {
-            return res.status(404).json({ error: true, message: '验证失败： 用户账号不存在！'})
-        } else if (user) {
-            //检查密码是否匹配
-            if (user.password === req.body.password) {
-               
-                return res.json({ error: true, message: '验证失败： 密码不符合！' })
-            } else {
-                return res.json({ error: false, message: '登录成功！' })
-            }
-        }
-    })*/
-    /*User.findOne({ username, password })
-    .then(user => {
-        if (!user) {
-            console.log('验证失败： 账号不存在！');
-            
-            return res.status(404).json({ error: true, message: '验证失败： 账号不存在！' })
-        } else if (user.password === req.body.password) {
-            //console.log(user._id);
-            var username = req.body.username
-            user.password = null
-            return res.json({ error: false, message: '登录成功！' })
-        } 
-        else {
-            console.log('验证失败： 密码不符合！');
-            return res.status(400).json({ error: true, message: '验证失败： 密码不符合！' })
-        }
-        
-    })
-    .catch(err => {
-            res.json(err)
-    })*/
     User.findOne({ username: username }, (err, user) => {
         if (err) throw err;
 

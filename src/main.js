@@ -22,20 +22,6 @@ Vue.component(Vodal.name, Vodal);
 
 Vue.config.productionTip = false
 
-/*toastr.options.closeButton = true
-toastr.options.progressBar = false
-toastr.options.preventDuplicates = false
-toastr.options.onclick = null
-toastr.options.newestOnTop = false
-toastr.options.progressBar = false
-options.showDuration = 300
-options.hideDuration = 1000
-toastr.options.timeOut = 3000 // How long the toast will display without user interaction
-toastr.options.extendedTimeOut = 1000 // How long the toast will display after a user hovers over it
-toastr.options.showEasing = 'swing'
-toastr.options.hideEasing = 'linear'
-toastr.options.showMethod = 'fadeIn'
-toastr.options.hideMethod = 'fadeIn'*/
 toastr.options = {
   "closeButton": true,
   "newestOnTop": false,
