@@ -13,7 +13,9 @@ import Vodal from 'vodal';
 import "vodal/common.css";
 import "vodal/rotate.css";
 import "./assets/loaders.css"
+
 axios.defaults.withCredentials = true
+
 Vue.use(MuseUi)
 import router from './router'
 Vue.prototype.$http = axios
@@ -21,6 +23,8 @@ Vue.prototype.toastr = toastr
 Vue.component(Vodal.name, Vodal);
 
 Vue.config.productionTip = false
+
+
 
 toastr.options = {
   "closeButton": true,
@@ -38,9 +42,12 @@ toastr.options = {
   "showMethod": "fadeIn",
   "hideMethod": "fadeOut"
 }
+
+
+// 全局导航钩子
 router.beforeEach((to, from, next) => {
   //var userInfo = JSON.parse(sessionStorage.getItem('userInfoStorage'));//获取浏览器缓存的用户信息
-  axios.get('/api/user').then(res => {
+  axios.get('/api/check').then(res => {
     if (res.data.status === 4) {
       if (to.path == '/login') {//如果是登录页面路径，就直接next()
         next();
@@ -58,6 +65,20 @@ router.beforeEach((to, from, next) => {
 new Vue({
   /*el: '#app',*/
   router,
+  watch: {
+    "$route": 'checkLogin'
+  },
+
+  //进入页面时
+  created() {
+    this.checkLogin();
+  },
+
+  methods: {
+    checkLogin() {
+      
+    }
+ },
   /*template: '<App/>',
   components: { App }*/
   render: h => h(App)
