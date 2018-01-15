@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import BookList from '@/components/BookList'
 import BookDetail from '@/components/BookDetail'
 import Login from '@/components/user/login'
+import Book from '@/components/book'
 import axios from 'axios'
 import store from '@/store/index.js'
 
@@ -11,10 +12,19 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
+      path: '/',
+      name: '首页',
+      meta: {
+        requireLogin: false,
+      },
+      component: Book
+    },
+    {
       path: '/login',
       name: '登录',
       meta: {
-        requireLogin: false
+        requireLogin: false,
+        noLogin: true
       },
       component: Login
     },
@@ -22,7 +32,7 @@ const router = new Router({
       path: '/bookList',
       name: 'BookList',
       meta: {
-        requireLogin: true 
+        requireLogin: true
       },
       component: BookList
     },
@@ -104,6 +114,35 @@ const router = new Router({
          next();
      }
  })
+//登录成功之后防止跳转到登录页面
+router.beforeEach((to, from, next) => {
+  //if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.meta.noLogin) {
+    // 向后端请求获取session的api
+    axios.get('/api/session')
+      .then(res => {
+        console.dir(res.data.session)
+        if (res.data.session === true) {
+          next({
+            // 如果session失效，则跳转至登录页
+            path: '/bookList',
+            // 跳转后将跳转前的url赋值给参数redirect
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        } else {
+          next()
+        }
+      })
+      .catch(err => {
+        console.dir(err);
+      })
+
+  } else {
+    next();
+  }
+})
 
 
  /*router.beforeEach((to, from, next) => {

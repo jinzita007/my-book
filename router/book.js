@@ -4,7 +4,7 @@ const Book = require('../models/book')
 const checkLogin = require('../middlewares/check').checkLogin
 //const checkNotLogin = require('../middlewares/check').checkNotLogin
 
-//查询所有书籍
+//查询所有书籍+管理页面
 router.get('/book', checkLogin ,(req, res) => {
 
         Book.find({})
@@ -17,6 +17,20 @@ router.get('/book', checkLogin ,(req, res) => {
             })
     
 })
+//查询所有书籍+普通页面
+router.get('/books', (req, res) => {
+
+    Book.find({})
+        .sort({ update_at: -1 })
+        .then(books => {
+            res.json(books)
+        })
+        .catch(err => {
+            res.json(err)
+        })
+
+})
+
 
 //查询一个书籍
 router.get('/book/:id', checkLogin , (req, res) => {
