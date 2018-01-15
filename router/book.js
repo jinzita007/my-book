@@ -44,7 +44,7 @@ router.get('/book/:id', checkLogin , (req, res) => {
 })
 
 //模糊查询一个书籍名称
-router.get('/', checkLogin ,(req, res) => {
+router.get('/', (req, res) => {
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Book.find({ title: regex }, (err, allbook) => {
@@ -52,10 +52,10 @@ router.get('/', checkLogin ,(req, res) => {
                 res.json(err)
             } else {
                 if(allbook.length < 1) {
-                    err_msg = [{err:"找不到关键词！"}]
-                    res.json(err_msg);
+                    //err_msg = [{ err: "找不到关键词！" }, {success: false}]
+                    res.json({ success: false, message: '失败查询！'});
                 } else {
-                    res.json(allbook)
+                    res.json({ success: true, message: '成功查询！', allbook})
                 }
             }
         })
