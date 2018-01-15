@@ -18,10 +18,17 @@ router.get('/user', checkLogin, (req, res) => {
    
 })
 //
-router.get('/check', checkLogin, (req, res) => {
+/*router.get('/check', checkLogin, (req, res) => {
     if (req.session.user) {
         return res.json({ status: 3, error: false, message: "已经登录！" })
     } 
+})*/
+//提供验证session存在是否
+router.get('/session', checkLogin, (req, res) =>{
+    res.json({
+        session: true,
+        message: '成功'
+    })
 })
 
 //注册一个用户
@@ -48,16 +55,16 @@ router.post('/login', checkNotLogin, (req, res) => {
         if (err) throw err;
       
         if (!user) {
-            return res.json({ status: 2, error: true, message: '验证失败：账号不存在！' });
+            return res.json({ success: false, error: '该账户已注册' });
         }
 
         if (user.password === password) {
             req.session.user = user.username
-            return res.json({ status: 1, error: false, message: '验证成功： 登录成功！' })
+            return res.json({ success: true, status: 1, error: false, message: '验证成功： 登录成功！', name: user.username,})
         } 
 
         if (user.password != password) {
-            return res.json({ status: 0, error: true, message: '验证失败：密码不符合！' });
+            return res.json({ success: false, status: 0, error: true, message: '验证失败：密码不符合！' });
         }
         
         
