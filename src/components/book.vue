@@ -1,5 +1,8 @@
 <template>
-<div class="demo-grid">
+<div class="loading" v-if="isLoaingData">
+        <div class="ball-spin-fade-loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div class="demo-grid" v-else>
 <mu-paper>
   <mu-bottom-nav :value="bottomNav" @change="handleChange">
     <mu-bottom-nav-item value="recents" title="所有图书" icon="restore"/>
@@ -9,11 +12,15 @@
    
   </mu-bottom-nav>
 </mu-paper>
-<!--<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/> 
-    <br>-->
-   
-    <br>
-<div class="list-group" v-for="item in books" :key="item._id">
+<div class="search-center">
+<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/> 
+<mu-raised-button @click="searchClick" label="确定" primary/>
+<mu-raised-button @click="getBooks" label="全部图书" primary/>
+</div>
+<br><br>
+
+<!--搜索图书列表-->
+<div class="list-group" v-for="item in book" :key="item.id">
     <div class="item  col-xs-4 col-lg-4 grid-group-item">
         <div class="thumbnail">
                 <img class="group list-group-image" :src="item.img_url" alt="">
@@ -36,11 +43,39 @@
             </div>
     </div>
 </div>
+
+<!--全部图书列表-->
+<div class="list-group" v-show="isbook" v-for="item in books" :key="item._id">
+    <div class="item  col-xs-4 col-lg-4 grid-group-item">
+        <div class="thumbnail">
+                <img class="group list-group-image" :src="item.img_url" alt="">
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading">
+                        {{item.title}}</h4>
+                    <!--<p class="group inner list-group-item-text">
+                        {{item.introduction}}
+                       </p>-->
+                    <div class="row">
+                        <!--<div class="col-xs-12 col-md-6">
+                            <p class="lead">
+                                ${{item.price}}.00</p>
+                        </div>-->
+                        <div class="col-xs-12 col-md-6">
+                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+
 </div>
 </template>
 <script>
     export default {
         created() {
+          this.searchClick()
           this.getBooks()
         },
         
@@ -48,23 +83,62 @@
             return{
                 books: [],
                 bottomNav: 'recents',
+                search: '',
+                book: [],
+                isbook: false,
+                isLoaingData: true
             }
         },
         props: ['isLoginn'],
     
         methods: {
             getBooks() {
+    
                 this.$http.get('/api/books').then(res => {
                     this.books = res.data
-                    console.log(res.data);   
+                    console.log(res.data);  
+                    this.isLoaingData = false
+                    this.isbook = true
+                    this.book  = ''
+                    this.search = ''
                 })
                 .catch(err => {
                     console.log(err);     
                 })
+     
+            
             },
             handleChange (val) {
               this.bottomNav = val
            },
+            //搜索书名
+        searchClick() {
+
+               this.$http.get('/api?search='+this.search).then(res => {
+    
+                if(res.data.success === false) {
+                     this.toastr.warning(res.data.message)
+                } else {
+                     //console.log(res.data)
+                    this.toastr.success(res.data.message)
+                    this.book = res.data.allbook
+                    //console.log(this.search);
+                    this.isbook = false
+                    this.isLoaingData = false
+                }
+             
+              
+          })
+          .catch(err => {
+                    console.log(err);     
+                })
+           
+
+         },
+       
+        },
+        computed: {
+       
         }
     }
 </script>
@@ -132,12 +206,13 @@
 .list-group-item-heading {
     margin-top: 0;
     margin-bottom: 5px;
+    text-align: center;
 }
 .list-group-item-text {
     margin: 0 0 11px;
 }
 .col-xs-12 {
-    width: 100%;
+    /*width: 100%;*/
     float: left;
 }
 @media (min-width: 768px){
@@ -182,9 +257,46 @@
 .clearfix:after, .dl-horizontal dd:after, .container:after, .container-fluid:after, .row:after, .form-horizontal .form-group:after, .btn-toolbar:after, .btn-group-vertical>.btn-group:after, .nav:after, .navbar:after, .navbar-header:after, .navbar-collapse:after, .pager:after, .panel-body:after, .modal-footer:after {
     clear: both;
 }
-.mu-paper{
+.mu-paper-1{
     margin-bottom: 25px;
+}
+.search-center{
+    text-align: center;
+    margin: 0 auto;
+}
+.mu-text-field-hint{
+    width: 70%;
 }
 
 
+
+.loading{
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    box-sizing: border-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-preferred-size: 25%;
+    flex-basis: 25%;
+    max-width: 25%;
+    height: 200px;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+
+}
+
+.ball-spin-fade-loader > div {
+    background-color: rgb(1, 73, 206);
+}
 </style>
