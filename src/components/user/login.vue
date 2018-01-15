@@ -34,16 +34,9 @@
 </template>
 
 <script>
-
+import {mapActions} from 'vuex'
 export default {
-   beforeCreate: function () {
-        //console.log('beforeCreate 钩子执行...');
-        this.$http.get('/api/check').then(res => {
-            if (res.data.status === 3) {
-                this.$router.push('/')
-            }
-  })
-      },
+
   data () {
     return {
             username: '',
@@ -55,31 +48,43 @@ export default {
             activeTab: 'tab1',
     }
   },
+beforeCreate: function () {
+       
+        this.$http.get('/api/session').then(res => {
+            if (res.data.session === true) {
+                this.$router.push('/bookList')
+            }
+  }).
+  catch(err => {
+      console.log(err);     
+  })
+},
 
    methods: {
+    ...mapActions(["userLogin"]),
+
     handleTabChange(val) {
       this.activeTab = val
     },
-
+    //通过登录接口发起请求
     checkLogin() {
-         //var username = this.username
-         //console.log(username)
+
          this.$http.post('/api/login',{username:this.username,password:this.password})
         .then(res => {
-             //登录成功 跳转至首页
-             if (res.data.status === 1) {
+            if (res.data.success === true) {
+                 console.dir(res.data)
+                 this.userLogin(res.data)
                  this.toastr.success(res.data.message)
-                 this.$router.push('/')
-             } else if (res.data.status === 2) {
-                 this.toastr.warning(res.data.message)
-             } else if (res.data.status === 3){
-                 this.toastr.warning(res.data.message)
-             } else if (res.data.status === 0) {
-                 this.toastr.error(res.data.message)
-             }    
+                 this.$router.push({ path: 'bookList' }) 
+            }
+            else{
+                     this.toastr.error(res.data.error)
+                      //this.$message.error(`${res.data.message}`);
+                      return false;
+                    }
+            
          })
          .catch(err => {
-             this.toastr.error('登录失败！')
              console.log(err); 
          })
     },

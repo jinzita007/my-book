@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import axios from 'axios'
 import MuseUi from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import './assets/icon.css'
@@ -13,18 +12,18 @@ import Vodal from 'vodal';
 import "vodal/common.css";
 import "vodal/rotate.css";
 import "./assets/loaders.css"
-
 axios.defaults.withCredentials = true
-
+//import axios from './util/axios.js'
 Vue.use(MuseUi)
 import router from './router'
+import axios from 'axios'
 Vue.prototype.$http = axios
 Vue.prototype.toastr = toastr
 Vue.component(Vodal.name, Vodal);
 
+import store from './store/index.js'
+
 Vue.config.productionTip = false
-
-
 
 toastr.options = {
   "closeButton": true,
@@ -43,42 +42,11 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
-
-// 全局导航钩子
-router.beforeEach((to, from, next) => {
-  //var userInfo = JSON.parse(sessionStorage.getItem('userInfoStorage'));//获取浏览器缓存的用户信息
-  axios.get('/api/check').then(res => {
-    if (res.data.status === 4) {
-      if (to.path == '/login') {//如果是登录页面路径，就直接next()
-        next();
-      } else {//不然就跳转到登录；
-        next('/login');
-      }
-    } else { //如果有就直接到首页咯
-      next();
-    }
-  })
-
-});
-
 /* eslint-disable no-new */
 new Vue({
   /*el: '#app',*/
   router,
-  watch: {
-    "$route": 'checkLogin'
-  },
-
-  //进入页面时
-  created() {
-    this.checkLogin();
-  },
-
-  methods: {
-    checkLogin() {
-      
-    }
- },
+  store,
   /*template: '<App/>',
   components: { App }*/
   render: h => h(App)

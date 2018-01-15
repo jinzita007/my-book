@@ -7,8 +7,8 @@ const path = require('path')
 module.exports = {
   dev: {
     env: require('./dev.env'),
-    port: 8080,
-    autoOpenBrowser: true,
+    /*port: 8080,
+    autoOpenBrowser: true,*/
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
