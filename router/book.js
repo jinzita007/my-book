@@ -86,6 +86,7 @@ router.put('/book/:id', checkLogin , (req, res) => {
         title: req.body.title,
         author: req.body.author,
         price: req.body.price,
+        tags: req.body.tags,
         introduction: req.body.introduction,
         img_url: req.body.img_url,
         down_url: req.body.down_url}
