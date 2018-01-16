@@ -118,6 +118,7 @@ beforeCreate: function () {
 <style>
 
 .table {
+   text-align: center;
    position: absolute;
    width: 400px;
    height: 380px;
