@@ -20,54 +20,39 @@
 <!-- tab1 -->
 <div v-if="bottomNav === 'tab1'">
 
-<!--全部图书列表-->
-<div class="list-group" v-show="isbook" v-for="item in books" :key="item._id">
-    <div class="item  col-xs-4 col-lg-4 grid-group-item">
-        <div class="thumbnail">
-                <img class="group list-group-image" :src="item.img_url" alt="">
-                <div class="caption">
-                    <h4 class="group inner list-group-item-heading">
-                        {{item.title}}</h4>
-                    <!--<p class="group inner list-group-item-text">
-                        {{item.introduction}}
-                       </p>-->
-                    <div class="row">
-                        <!--<div class="col-xs-12 col-md-6">
-                            <p class="lead">
-                                ${{item.price}}.00</p>
-                        </div>-->
-                        <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
-                        </div>
-                    </div>
-                </div>
-        </div>
+    <!--全部图书列表-->
+    <div class="wrapper">
+        <div class="list-main">
+            <ul class="list-ul">
+                <li class="list-group" v-show="isbook" v-for="item in books" :key="item._id">
+                     <a heref="">
+                       <img class="group list-group-image" :src="item.img_url" alt="">
+                     </a>
+                     <p>{{item.title}}</p>  
+                     <strong>{{item.rating.everage}}</strong>  
+                </li>
+            </ul>
+        </div> 
     </div>
-</div>
 
 </div>
 
 <!-- tab2 -->
 <div v-if="bottomNav === 'tab2'">
 <!-- 评分最多 -->
-<div class="list-group" v-show="isbook" v-if="item.rating.everage >= 9.0" v-for="item in scorebooks">
-    <div class="item  col-xs-4 col-lg-4 grid-group-item">
-        <div class="thumbnail">
-                <img class="group list-group-image" :src="item.img_url" alt="">
-                <div class="caption">
-                    <h4 class="group inner list-group-item-heading">
-                        {{item.title}}</h4>
-                    
-                    <div class="row">
-                       
-                        <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
-                        </div>
-                    </div>
-                </div>
-        </div>
+    <div class="wrapper">
+        <div class="list-main">
+            <ul class="list-ul">
+                <li class="list-group" v-show="isbook" v-if="item.rating.everage >= 9.0" v-for="item in scorebooks">
+                   <a heref="">
+                       <img class="group list-group-image" :src="item.img_url" alt="">
+                     </a>
+                     <p>{{item.title}}</p>  
+                     <strong>{{item.rating.everage}}</strong>  
+                </li>
+            </ul>
+        </div> 
     </div>
-</div>
     
 </div>
 <!-- tab3 -->
@@ -77,29 +62,20 @@
 
 
 <!--搜索图书列表-->
-<div class="list-group" v-for="item,index in book" :key="item.id">
-    <div class="item  col-xs-4 col-lg-4 grid-group-item">
-        <div class="thumbnail">
-                <img class="group list-group-image" :src="item.img_url" alt="">
-                <div class="caption">
-                    <h4 class="group inner list-group-item-heading">
-                        {{item.title}}</h4>
-                    <!--<p class="group inner list-group-item-text">
-                        {{item.introduction}}
-                       </p>-->
-                    <div class="row">
-                        <!--<div class="col-xs-12 col-md-6">
-                            <p class="lead">
-                                ${{item.price}}.00</p>
-                        </div>-->
-                        <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
+<div class="wrapper">
+        <div class="list-main">
+            <ul class="list-ul">
+                <li class="list-group" v-for="item,index in book" :key="item.id">
+                   <a heref="">
+                       <img class="group list-group-image" :src="item.img_url" alt="">
+                     </a>
+                     <p>{{item.title}}</p>  
+                     <strong>{{item.rating.everage}}</strong>  
+                </li>
+            </ul>
+        </div> 
 </div>
+
 
 
 
@@ -180,78 +156,47 @@
     }
 </script>
 <style lang="css">
-   
-.list-group {
-    padding-left: 0;
+.wrapper {
+    width: 950px;
+    margin: 0 auto;
 }
-.demo-grid {
- width: 80%;
- margin: 0 auto;
+.list-main {
+    overflow: hidden;
+    zoom: 1;
+    border: 1px dashed red;
+}
+.list-ul {
+    margin-left: 60px;
+}
+.list-ul li {
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+    margin-right: 60px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.list-ul li img {
+    width: 100px;
+    height: 141px;
+}
+   
+.list-ul li p {
+ margin: 5px 0 0;
+    height: 44px;
+    overflow: hidden;
+}
+.list-ul li strong {
+    color: #ffb47a;
 }
 .row {
     margin-right: -15px;
     margin-left: -15px;
 }
-.col-xs-4 {
-    /*width: 33.33333333%;*/
-    width: 25%;
-    float: left;
-    position: relative;
-    min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
-}
-.thumbnail {
-    position: relative;
-    border-radius: 2px;
-    -webkit-box-shadow: 0 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
-    box-shadow: 0 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
-    margin-bottom: 25px;
-    padding: 0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-    display: block;
-    /*background-color: #fffdfd;*/
-    line-height: 1.42857143;
-    
-    -webkit-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
-}
-.thumbnail>img, .thumbnail a>img {
-    margin-right: auto;
-    margin-left: auto;
-}
-/*.img-responsive, .thumbnail>img, .thumbnail a>img, .carousel-inner>.item>img, .carousel-inner>.item>a>img {
-    display: block;
-    width: 100% \9;
-    max-width: 100%;
-    height: auto;
-}*/
-.list-group-image {
-    display: block;
-    width: 50%;
-    height: 200px;
-    margin-top: 10px;
-   /* border: 1px solid rgb(163, 163, 163);*/
-}
-.thumbnail .caption {
-    padding: 9px;
-    color: #333;
-}
-.list-group-item-heading {
-    margin-top: 0;
-    margin-bottom: 5px;
-    text-align: center;
-}
-.list-group-item-text {
-    margin: 0 0 11px;
-}
-.col-xs-12 {
-    /*width: 100%;*/
-    float: left;
-}
+
+
+
 @media (min-width: 768px){
 .lead {
     font-size: 21px;
