@@ -239,7 +239,10 @@
 .clearfix:after, .dl-horizontal dd:after, .container:after, .container-fluid:after, .row:after, .form-horizontal .form-group:after, .btn-toolbar:after, .btn-group-vertical>.btn-group:after, .nav:after, .navbar:after, .navbar-header:after, .navbar-collapse:after, .pager:after, .panel-body:after, .modal-footer:after {
     clear: both;
 }
-.mu-paper-1{
+/*.mu-paper-1{
+    margin-bottom: 25px;
+}*/
+.mu-bottom-nav {
     margin-bottom: 25px;
 }
 .search-center{
