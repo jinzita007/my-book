@@ -5,11 +5,9 @@
 <div class="demo-grid" v-else>
 <mu-paper>
   <mu-bottom-nav :value="bottomNav" @change="handleChange">
-    <mu-bottom-nav-item value="recents" title="所有图书" icon="restore"/>
-    <mu-bottom-nav-item value="favorites" title="推荐" icon="favorite"/>
-    <mu-bottom-nav-item value="nearby" title="最多评分" icon="location_on"/>
-    <mu-bottom-nav-item value="bangyang" title=" 2017年度榜单" icon="location_on"/>
-   
+    <mu-bottom-nav-item value="tab1" title="所有图书" icon="restore"/>
+    <mu-bottom-nav-item value="tab2" title="最多评分" icon="location_on"/>
+    <mu-bottom-nav-item value="tab3" title=" 2017年度榜单" icon="location_on"/>
   </mu-bottom-nav>
 </mu-paper>
 <div class="search-center">
@@ -19,30 +17,8 @@
 </div>
 <br><br>
 
-<!--搜索图书列表-->
-<div class="list-group" v-for="item in book" :key="item.id">
-    <div class="item  col-xs-4 col-lg-4 grid-group-item">
-        <div class="thumbnail">
-                <img class="group list-group-image" :src="item.img_url" alt="">
-                <div class="caption">
-                    <h4 class="group inner list-group-item-heading">
-                        {{item.title}}</h4>
-                    <!--<p class="group inner list-group-item-text">
-                        {{item.introduction}}
-                       </p>-->
-                    <div class="row">
-                        <!--<div class="col-xs-12 col-md-6">
-                            <p class="lead">
-                                ${{item.price}}.00</p>
-                        </div>-->
-                        <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
-</div>
+<!-- tab1 -->
+<div v-if="bottomNav === 'tab1'">
 
 <!--全部图书列表-->
 <div class="list-group" v-show="isbook" v-for="item in books" :key="item._id">
@@ -65,9 +41,67 @@
                         </div>
                     </div>
                 </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- tab2 -->
+<div v-if="bottomNav === 'tab2'">
+<!-- 评分最多 -->
+<div class="list-group" v-show="isbook" v-if="item.rating.everage >= 9.0" v-for="item in scorebooks">
+    <div class="item  col-xs-4 col-lg-4 grid-group-item">
+        <div class="thumbnail">
+                <img class="group list-group-image" :src="item.img_url" alt="">
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading">
+                        {{item.title}}</h4>
+                    
+                    <div class="row">
+                       
+                        <div class="col-xs-12 col-md-6">
+                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+    
+</div>
+<!-- tab3 -->
+<div v-if="bottomNav === 'tab3'">
+    <h2>tab3</h2>
+</div>
+
+
+<!--搜索图书列表-->
+<div class="list-group" v-for="item,index in book" :key="item.id">
+    <div class="item  col-xs-4 col-lg-4 grid-group-item">
+        <div class="thumbnail">
+                <img class="group list-group-image" :src="item.img_url" alt="">
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading">
+                        {{item.title}}</h4>
+                    <!--<p class="group inner list-group-item-text">
+                        {{item.introduction}}
+                       </p>-->
+                    <div class="row">
+                        <!--<div class="col-xs-12 col-md-6">
+                            <p class="lead">
+                                ${{item.price}}.00</p>
+                        </div>-->
+                        <div class="col-xs-12 col-md-6">
+                            <a class="btn btn-success" href="http://www.jquery2dotnet.com">百度云下载</a>
+                        </div>
+                    </div>
+                </div>
             </div>
     </div>
 </div>
+
+
 
 
 </div>
@@ -82,9 +116,10 @@
         data(){
             return{
                 books: [],
-                bottomNav: 'recents',
+                bottomNav: 'tab1',
                 search: '',
                 book: [],
+                scorebooks:[],
                 isbook: false,
                 isLoaingData: true
             }
@@ -92,23 +127,25 @@
         props: ['isLoginn'],
     
         methods: {
+            //获取所有图书
             getBooks() {
-    
                 this.$http.get('/api/books').then(res => {
                     this.books = res.data
-                    console.log(res.data);  
+                    this.scorebooks = res.data
+                    //console.log(res.data) 
                     this.isLoaingData = false
                     this.isbook = true
                     this.book  = ''
-                    this.search = ''
+                    this.search = ''  
                 })
                 .catch(err => {
                     console.log(err);     
                 })
-     
-            
             },
+            //评分最多
+         
             handleChange (val) {
+
               this.bottomNav = val
            },
             //搜索书名

@@ -7,6 +7,12 @@ const bookSchema = mongoose.Schema({
     introduction: String,
     img_url: String,
     tags:[String],
+    rating: {
+        max: Number,
+        numRaters: Number,
+        everage: Number,
+        min: Number
+    },
     down_url: String,
     created_at: { type: Date, default : Date.now },
     update_at: { type: Date, default: Date.now }

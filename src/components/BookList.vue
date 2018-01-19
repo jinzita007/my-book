@@ -283,6 +283,7 @@ export default {
           this.getBooks();
           this.author = "";
           this.price = "";
+          this.tags = "";
           this.introduction = "";
           this.img_url = "";
           this.book_id = "";
