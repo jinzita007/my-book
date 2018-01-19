@@ -48,7 +48,7 @@ export default {
           //console.log(this.$route.params.title);
           let id = this.$route.params.id
           setTimeout(() => { 
-          this.$http.get(`/api/book/${id}`)
+          this.$http.get(`/api/books/${id}`)
           .then(res => { 
               //console.log(res.data)
               this.book = res.data; 

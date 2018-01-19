@@ -7,7 +7,6 @@
   <mu-bottom-nav :value="bottomNav" @change="handleChange">
     <mu-bottom-nav-item value="tab1" title="所有图书" icon="restore"/>
     <mu-bottom-nav-item value="tab2" title="最多评分" icon="location_on"/>
-    <mu-bottom-nav-item value="tab3" title=" 2017年度榜单" icon="location_on"/>
   </mu-bottom-nav>
 </mu-paper>
 <div class="search-center">
@@ -25,7 +24,7 @@
         <div class="list-main">
             <ul class="list-ul">
                 <li class="list-group" v-show="isbook" v-for="item in books" :key="item._id">
-                     <a heref="">
+                     <a @click="showDetail(item._id)">
                        <img class="group list-group-image" :src="item.img_url" alt="">
                      </a>
                      <p>{{item.title}}</p>  
@@ -44,7 +43,7 @@
         <div class="list-main">
             <ul class="list-ul">
                 <li class="list-group" v-show="isbook" v-if="item.rating.everage >= 9.0" v-for="item in scorebooks">
-                   <a heref="">
+                     <a @click="showDetail(item._id)">
                        <img class="group list-group-image" :src="item.img_url" alt="">
                      </a>
                      <p>{{item.title}}</p>  
@@ -55,10 +54,6 @@
     </div>
     
 </div>
-<!-- tab3 -->
-<div v-if="bottomNav === 'tab3'">
-    <h2>tab3</h2>
-</div>
 
 
 <!--搜索图书列表-->
@@ -66,7 +61,7 @@
         <div class="list-main">
             <ul class="list-ul">
                 <li class="list-group" v-for="item,index in book" :key="item.id">
-                   <a heref="">
+                     <a @click="showDetail(item._id)">
                        <img class="group list-group-image" :src="item.img_url" alt="">
                      </a>
                      <p>{{item.title}}</p>  
@@ -145,10 +140,11 @@
           .catch(err => {
                     console.log(err);     
                 })
-           
-
          },
-       
+
+        showDetail(_id) {
+            this.$router.push(`/${_id}`);
+         }
         },
         computed: {
        
@@ -156,6 +152,9 @@
     }
 </script>
 <style lang="css">
+a {
+cursor:pointor;
+}
 .wrapper {
     width: 950px;
     margin: 0 auto;

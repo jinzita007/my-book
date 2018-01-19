@@ -31,6 +31,17 @@ router.get('/books', (req, res) => {
 
 })
 
+//查询一个书籍+普通页面
+router.get('/books/:id', (req, res) => {
+    Book.findById(req.params.id, (err, book) => {
+        if (err) {
+            res.json(err)
+        } else {
+            res.json(book)
+        }
+    })
+})
+
 
 //查询一个书籍
 router.get('/book/:id', checkLogin , (req, res) => {

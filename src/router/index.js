@@ -20,6 +20,14 @@ const router = new Router({
       component: Book
     },
     {
+      path: '/:id',
+      name: 'BookDetail',
+      meta: {
+        requireLogin: false
+      },
+      component: BookDetail
+    },
+    {
       path: '/login',
       name: '登录',
       meta: {
@@ -35,15 +43,7 @@ const router = new Router({
         requireLogin: true
       },
       component: BookList
-    },
-    {
-      path: '/book/:id',
-      name: 'BookDetail',
-      meta: {
-        requireLogin: true
-      },
-      component: BookDetail
-    },
+    }
     /*{
       path: '*',
       redirect: '/'
