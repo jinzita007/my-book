@@ -143,7 +143,7 @@
          },
 
         showDetail(_id) {
-            this.$router.push(`/${_id}`);
+            this.$router.push(`/book/${_id}`);
          }
         },
         computed: {
@@ -152,9 +152,7 @@
     }
 </script>
 <style lang="css">
-a {
-cursor:pointor;
-}
+
 .wrapper {
     width: 950px;
     margin: 0 auto;
@@ -162,7 +160,7 @@ cursor:pointor;
 .list-main {
     overflow: hidden;
     zoom: 1;
-    border: 1px dashed red;
+    /*border: 1px dashed red;*/
 }
 .list-ul {
     margin-left: 60px;
@@ -182,12 +180,15 @@ cursor:pointor;
 }
    
 .list-ul li p {
- margin: 5px 0 0;
+    margin: 5px 0 0;
     height: 44px;
     overflow: hidden;
 }
 .list-ul li strong {
     color: #ffb47a;
+}
+.list-ul li a:hover{
+   cursor:pointor!important;
 }
 .row {
     margin-right: -15px;

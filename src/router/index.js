@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BookList from '@/components/BookList'
-import BookDetail from '@/components/BookDetail'
 import Login from '@/components/user/login'
 import Book from '@/components/book'
+import BookDetail from '@/components/BookDetail'
 import axios from 'axios'
 import store from '@/store/index.js'
 
@@ -20,7 +20,7 @@ const router = new Router({
       component: Book
     },
     {
-      path: '/:id',
+      path: '/book/:id',
       name: 'BookDetail',
       meta: {
         requireLogin: false

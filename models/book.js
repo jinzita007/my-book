@@ -9,9 +9,9 @@ const bookSchema = mongoose.Schema({
     tags:[String],
     rating: {
         max: Number,
-        numRaters: Number,
         everage: Number,
-        min: Number
+        min: Number, 
+        stars: Number,
     },
     down_url: String,
     created_at: { type: Date, default : Date.now },

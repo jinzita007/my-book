@@ -62,7 +62,7 @@
         </vodal>
 
     <!--编辑书籍表单-->
-    <vodal :show="editBookModal" animation="slideDown" :width="500" :height="600" :closeButton="false">
+    <vodal :show="editBookModal" animation="slideDown" :width="500" :height="900" :closeButton="false">
         <mu-text-field v-model="title" fullWidth icon="book" label="书籍名称" labelFloat/><br/>
         <mu-text-field v-model="author" fullWidth icon="account_box" label="作者" labelFloat/><br/>
     <!-- TAG标签 -->
@@ -87,6 +87,7 @@
         <br/>
         <mu-text-field v-model="img_url" fullWidth icon="picture_in_picture" label="书籍地址" labelFloat/><br/>
         <mu-text-field v-model="price" fullWidth icon="attach_money" label="价格" labelFloat/><br/>
+        <mu-text-field v-model="everage" fullWidth icon="attach_money" label="评分" labelFloat/><br/>
         <mu-text-field v-model="introduction"
         multiLine :rows="2" :rowsMax="6"
         fullWidth icon="description" label="简介" labelFloat/><br/>
@@ -122,6 +123,7 @@ export default {
       newTag: "",
       //tags: ['Vue', 'React', 'Jquery']
       tags: [],
+      everage:"",
       msg: "",
       addBookModal: false,
       editBookModal: false,
@@ -227,6 +229,7 @@ export default {
           title: this.title,
           author: this.author,
           price: this.price,
+          //everage: this.rating.everage,
           introduction: this.introduction,
           img_url: this.img_url
         })
@@ -260,6 +263,7 @@ export default {
       this.author = book.author;
       this.price = book.price;
       this.tags = book.tags;
+      this.everage = book.rating.everage;
       this.introduction = book.introduction;
       this.img_url = book.img_url;
       this.book_id = book._id;
@@ -273,6 +277,7 @@ export default {
           author: this.author,
           price: this.price,
           tags: this.tags,
+          everage: this.everage,
           introduction: this.introduction,
           img_url: this.img_url
         })
@@ -339,6 +344,9 @@ export default {
 </script>
 
 <style>
+.vodal-dialog {
+  height: 100%;
+}
 .demo-button {
   text-align: center;
 }
