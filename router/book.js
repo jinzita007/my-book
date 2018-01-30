@@ -4,6 +4,28 @@ const Book = require('../models/book')
 const checkLogin = require('../middlewares/check').checkLogin
 //const checkNotLogin = require('../middlewares/check').checkNotLogin
 
+
+//模糊查询一个书籍名称
+router.get('/', (req, res) => {
+
+    if (req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Book.find({ title: regex }, (err, allbook) => {
+            if (err) {
+                res.json(err)
+            } else {
+                if (allbook.length < 1) {
+                    //err_msg = [{ err: "找不到关键词！" }, {success: false}]
+                    res.json({ success: false, message: '失败查询！' });
+                } else {
+                    res.json({ success: true, message: '成功查询！', allbook })
+                }
+            }
+        })
+    }
+
+})
+
 //查询所有书籍+管理页面
 router.get('/book', checkLogin ,(req, res) => {
 
@@ -54,25 +76,7 @@ router.get('/book/:id', checkLogin , (req, res) => {
     })
 })
 
-//模糊查询一个书籍名称
-router.get('/', (req, res) => {
-    if (req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Book.find({ title: regex }, (err, allbook) => {
-            if (err) {
-                res.json(err)
-            } else {
-                if(allbook.length < 1) {
-                    //err_msg = [{ err: "找不到关键词！" }, {success: false}]
-                    res.json({ success: false, message: '失败查询！'});
-                } else {
-                    res.json({ success: true, message: '成功查询！', allbook})
-                }
-            }
-        })
-    }
-    
-})
+
 
 //添加一个书籍
 router.post('/book', checkLogin ,(req, res) => {

@@ -50,7 +50,7 @@ export default {
       getBook() {
           //console.log(this.$route.params.title);
           let id = this.$route.params.id
-          setTimeout(() => { 
+         // setTimeout(() => { 
           this.$http.get(`/api/books/${id}`)
           .then(res => { 
               //console.log(res.data)
@@ -60,7 +60,7 @@ export default {
           .catch(e => {
               console.log(e)
            })
-        }, 1000);
+       // }, 1000);
           
           
       }

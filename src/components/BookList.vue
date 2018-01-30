@@ -1,102 +1,118 @@
 <template>
 
-    <div class="loading" v-if="isLoaingData">
-        <div class="ball-spin-fade-loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-      </div>
-<!-- 搜索书名 -->
+  <div class="loading" v-if="isLoaingData">
+    <div class="ball-spin-fade-loader">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <!-- 搜索书名 -->
 
-<div class="list" v-else>
+  <div class="list" v-else>
     <br>
     <div class="demo-search">
-          <!-- 添加书籍按钮 -->
-          <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;"/>
-         <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/> 
-         <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
-    <br>
+      <!-- 添加书籍按钮 -->
+      <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
+      <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" />
+      <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
+      <br>
     </div>
-    
+
     <!-- 书籍列表 -->
-    <mu-table :fixedHeader="true" :showCheckbox="false" >
-        <mu-thead>
-          <mu-tr>
-            <mu-th>书籍图片</mu-th>
-            <mu-th>书籍名称</mu-th>
-            <mu-th>作者</mu-th>
-            <mu-th>简介</mu-th>
-            <mu-th>价格</mu-th>
-            <mu-th>操作</mu-th>
-          </mu-tr>
-        </mu-thead>
+    <mu-table :fixedHeader="true" :showCheckbox="false">
+      <mu-thead>
+        <mu-tr>
+          <mu-th>书籍图片</mu-th>
+          <mu-th>书籍名称</mu-th>
+          <mu-th>作者</mu-th>
+          <mu-th>简介</mu-th>
+          <mu-th>价格</mu-th>
+          <mu-th>操作</mu-th>
+        </mu-tr>
+      </mu-thead>
 
-        <mu-tbody>
-          <mu-tr v-for="book in filteredBooks" :key="book.id">
-            <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
-            <mu-td>{{ book.title }}</mu-td>
-            <mu-td class="movie-rating">{{ book.author }}</mu-td>
-            <mu-td>
-              <p class="book-introduction">{{ book.introduction }}</p></mu-td>
-               <mu-td class="movie-rating">{{ book.price }}元</mu-td>
-            <mu-td>
-              <mu-raised-button class="detail_color" @click="showDetail(book._id)" label="详细"/>
-              <mu-raised-button @click="openEditBookModal(book)" label="修改" primary/>
-              <mu-raised-button @click="removeBook(book)" label="删除" secondary/>
-            </mu-td>
-          </mu-tr>
-        </mu-tbody>
+      <mu-tbody>
+        <mu-tr v-for="book in filteredBooks" :key="book.id">
+          <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
+          <mu-td>{{ book.title }}</mu-td>
+          <mu-td class="movie-rating">{{ book.author }}</mu-td>
+          <mu-td>
+            <p class="book-introduction">{{ book.introduction }}</p>
+          </mu-td>
+          <mu-td class="movie-rating">{{ book.price }}元</mu-td>
+          <mu-td>
+            <mu-raised-button class="detail_color" @click="showDetail(book._id)" label="详细" />
+            <mu-raised-button @click="openEditBookModal(book)" label="修改" primary/>
+            <mu-raised-button @click="removeBook(book)" label="删除" secondary/>
+          </mu-td>
+        </mu-tr>
+      </mu-tbody>
 
-        
     </mu-table>
-   
-        <!-- 添加书籍表单 -->
-        <vodal :show="addBookModal" animation="slideDown" :width="500" :height="600" :closeButton="false">
-            <mu-text-field v-model="title" fullWidth icon="book" label="书籍名称" labelFloat/><br/>
-            <mu-text-field v-model="author" fullWidth icon="account_box" label="作者" labelFloat/><br/>
-            <mu-text-field v-model="img_url" fullWidth icon="picture_in_picture" label="书籍地址" labelFloat/><br/>
-            <mu-text-field v-model="price" fullWidth icon="attach_money" label="价格" labelFloat/><br/>
-            <mu-text-field v-model="introduction"
-            multiLine :rows="2" :rowsMax="6"
-            fullWidth icon="description" label="简介" labelFloat/><br/>
-            <p style="color:red">{{msg.message}}</p>
-            <mu-raised-button @click="closeModal" label="取消" icon="undo"  />
-            <mu-raised-button @click="addMovie" label="确定" icon="check" primary/>
-        </vodal>
 
-    <!--编辑书籍表单-->
-    <vodal :show="editBookModal" animation="slideDown" :width="500" :height="900" :closeButton="false">
-        <mu-text-field v-model="title" fullWidth icon="book" label="书籍名称" labelFloat/><br/>
-        <mu-text-field v-model="author" fullWidth icon="account_box" label="作者" labelFloat/><br/>
-    <!-- TAG标签 -->
-    <div class="tags-wrap mu-text-field has-label no-empty-state has-icon full-width">
+    <!-- 添加书籍表单 -->
+    <vodal :show="addBookModal" animation="slideDown" :width="500" :height="800" :closeButton="false">
+      <mu-text-field v-model="title" fullWidth icon="book" label="书籍名称" labelFloat/><br/>
+      <mu-text-field v-model="author" fullWidth icon="account_box" label="作者" labelFloat/><br/>
+      <!-- TAG标签 -->
+      <div class="tags-wrap mu-text-field has-label no-empty-state has-icon full-width">
         <i class="mu-text-field-icon mu-icon material-icons">picture_in_picture</i>
         <div class="tags mu-text-field-content">
-            <div class="mu-text-field-label">标签</div>
-        <span class="content" v-for="(tag, index) in tags" :key="index">{{tag}}
-        <span class="del" @click="del(index)">&times;</span>
-        </span>
-        <input class="tags-input mu-text-field-input" type="text" v-model="newTag"
-        v-on:keyup.delete.stop="delLastTag()"
-        v-on:keyup.enter="add(newTag)" placeholder="click enter">
-        <div><hr class="mu-text-field-line"> <hr class="mu-text-field-focus-line"></div>
+          <div class="mu-text-field-label">标签</div>
+          <span class="content" v-for="(tag, index) in tags" :key="index">{{tag}}
+            <span class="del" @click="del(index)">&times;</span>
+          </span>
+          <input class="tags-input mu-text-field-input" type="text" v-model="newTag" v-on:keyup.delete.stop="delLastTag()" v-on:keyup.enter="add(newTag)" placeholder="click enter">
+          <div><hr class="mu-text-field-line"> <hr class="mu-text-field-focus-line"></div>
         </div>
-    </div>
-    <!-- 测试专用的 -->
-     <!--<div class="form-group">
+      </div>
+      <mu-text-field v-model="img_url" fullWidth icon="picture_in_picture" label="书籍地址" labelFloat/><br/>
+      <mu-text-field v-model="price" fullWidth icon="attach_money" label="价格" labelFloat/><br/>
+      <mu-text-field v-model="everage" fullWidth icon="attach_money" label="评分" labelFloat/><br/>
+      <mu-text-field v-model="introduction" multiLine :rows="2" :rowsMax="6" fullWidth icon="description" label="简介" labelFloat/><br/>
+      <p style="color:red">{{msg.message}}</p>
+      <mu-raised-button @click="closeModal" label="取消" icon="undo" />
+      <mu-raised-button @click="addMovie" label="确定" icon="check" primary/>
+    </vodal>
+
+    <!--编辑书籍表单-->
+    <vodal :show="editBookModal" animation="slideDown" :width="500" :height="800" :closeButton="false">
+      <mu-text-field v-model="title" fullWidth icon="book" label="书籍名称" labelFloat/><br/>
+      <mu-text-field v-model="author" fullWidth icon="account_box" label="作者" labelFloat/><br/>
+      <!-- TAG标签 -->
+      <div class="tags-wrap mu-text-field has-label no-empty-state has-icon full-width">
+        <i class="mu-text-field-icon mu-icon material-icons">picture_in_picture</i>
+        <div class="tags mu-text-field-content">
+          <div class="mu-text-field-label">标签</div>
+          <span class="content" v-for="(tag, index) in tags" :key="index">{{tag}}
+            <span class="del" @click="del(index)">&times;</span>
+          </span>
+          <input class="tags-input mu-text-field-input" type="text" v-model="newTag" v-on:keyup.delete.stop="delLastTag()" v-on:keyup.enter="add(newTag)" placeholder="click enter">
+          <div><hr class="mu-text-field-line"> <hr class="mu-text-field-focus-line"></div>
+        </div>
+      </div>
+      <!-- 测试专用的 -->
+      <!--<div class="form-group">
        <label for="">Tags:</label>
        <code>{{tags}}</code>
      </div>-->
-        <br/>
-        <mu-text-field v-model="img_url" fullWidth icon="picture_in_picture" label="书籍地址" labelFloat/><br/>
-        <mu-text-field v-model="price" fullWidth icon="attach_money" label="价格" labelFloat/><br/>
-        <mu-text-field v-model="everage" fullWidth icon="attach_money" label="评分" labelFloat/><br/>
-        <mu-text-field v-model="introduction"
-        multiLine :rows="2" :rowsMax="6"
-        fullWidth icon="description" label="简介" labelFloat/><br/>
-        <div class="demo-button">
-        <mu-raised-button @click="closeModal" label="取消" icon="undo"  />
+      <br/>
+      <mu-text-field v-model="img_url" fullWidth icon="picture_in_picture" label="书籍地址" labelFloat/><br/>
+      <mu-text-field v-model="price" fullWidth icon="attach_money" label="价格" labelFloat/><br/>
+      <mu-text-field v-model="everage" fullWidth icon="attach_money" label="评分" labelFloat/><br/>
+      <mu-text-field v-model="introduction" multiLine :rows="2" :rowsMax="6" fullWidth icon="description" label="简介" labelFloat/><br/>
+      <div class="demo-button">
+        <mu-raised-button @click="closeModal" label="取消" icon="undo" />
         <mu-raised-button @click="editMovie" label="确定" icon="check" primary/>
-        </div>
+      </div>
     </vodal>
- 
+
   </div>
 </template>
 
@@ -121,9 +137,8 @@ export default {
       search: "",
       books: [],
       newTag: "",
-      //tags: ['Vue', 'React', 'Jquery']
       tags: [],
-      everage:"",
+      everage: "",
       msg: "",
       addBookModal: false,
       editBookModal: false,
@@ -215,7 +230,9 @@ export default {
       this.editBookModal = false;
       this.title = "";
       this.author = "";
+      this.tags = [];
       this.price = "";
+      this.everage = "";
       this.introduction = "";
       this.img_url = "";
       this.book_id = "";
@@ -228,8 +245,9 @@ export default {
         .post("/api/book", {
           title: this.title,
           author: this.author,
+          tags: this.tags,
           price: this.price,
-          //everage: this.rating.everage,
+          "rating.everage": this.everage,
           introduction: this.introduction,
           img_url: this.img_url
         })
@@ -240,7 +258,9 @@ export default {
           this.addBookModal = false;
           this.title = "";
           this.author = "";
+          this.tags = [];
           this.price = "";
+          this.everage = "";
           this.introduction = "";
           this.img_url = "";
           this.getBooks();

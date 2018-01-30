@@ -11,7 +11,7 @@
 </mu-paper>
 <div class="search-center">
 <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/> 
-<mu-raised-button @click="searchClick" label="确定" primary/>
+<mu-raised-button @click="searchClick($event)" label="确定" primary/>
 <mu-raised-button @click="getBooks" label="全部图书" primary/>
 </div>
 <br><br>
@@ -120,7 +120,7 @@
               this.bottomNav = val
            },
             //搜索书名
-        searchClick() {
+        searchClick(event) {
 
                this.$http.get('/api?search='+this.search).then(res => {
     
