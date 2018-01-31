@@ -17,69 +17,85 @@
   <div class="list" v-else>
     <br>
     <!--<div class="demo-search">-->
-      <!-- 添加书籍按钮 -->
-      <!--<mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
+    <!-- 添加书籍按钮 -->
+    <!--<mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
       <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" />
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
     </div>-->
 
-     <div class="demo-search">
+    <div class="demo-search">
       <!-- 添加书籍按钮 -->
       <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
       <!-- 搜索功能 -->
-      <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" />
+      <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" v-on:input="inputbook($event)" />
       <mu-raised-button @click="searchClick" label="搜索" style="margin-left: 20px;" primary/>
       <!-- 注销功能 -->
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
     </div>
     <div class="main-ok">
-    <!-- 书籍列表 -->
-    <mu-table :fixedHeader="true" :showCheckbox="false">
-      <mu-thead>
-        <mu-tr>
-          <mu-th>书籍图片</mu-th>
-          <mu-th>书籍名称</mu-th>
-          <mu-th>作者</mu-th>
-          <mu-th>简介</mu-th>
-          <mu-th>价格</mu-th>
-          <mu-th>操作</mu-th>
-        </mu-tr>
-      </mu-thead>
+      <!-- 书籍列表 -->
+      <mu-table :fixedHeader="true" :showCheckbox="false">
+        <mu-thead>
+          <mu-tr>
+            <mu-th>书籍图片</mu-th>
+            <mu-th>书籍名称</mu-th>
+            <mu-th>作者</mu-th>
+            <mu-th>简介</mu-th>
+            <mu-th>价格</mu-th>
+            <mu-th>操作</mu-th>
+          </mu-tr>
+        </mu-thead>
 
-      <div class="loading" v-if="loading">
-    <div class="ball-spin-fade-loader">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+        <div class="loading" v-if="loading">
+          <div class="ball-spin-fade-loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
 
+        <mu-tbody v-else v-show="showbook">
+          <mu-tr v-for="book in books" :key="book.id">
+            <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
+            <mu-td>{{ book.title }}</mu-td>
+            <mu-td class="movie-rating">{{ book.author }}</mu-td>
+            <mu-td>
+              <p class="book-introduction">{{ book.introduction }}</p>
+            </mu-td>
+            <mu-td class="movie-rating">{{ book.price }}元</mu-td>
+            <mu-td>
+              <mu-raised-button class="detail_color" @click="showDetail(book._id)" label="详细" />
+              <mu-raised-button @click="openEditBookModal(book)" label="修改" primary/>
+              <mu-raised-button @click="removeBook(book)" label="删除" secondary/>
+            </mu-td>
+          </mu-tr>
+        </mu-tbody>
+        <!-- 搜索列表 -->
+        <mu-tbody v-show="showsearch">
+          <mu-tr v-for="book in searchbook" :key="book.id">
+            <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
+            <mu-td>{{ book.title }}</mu-td>
+            <mu-td class="movie-rating">{{ book.author }}</mu-td>
+            <mu-td>
+              <p class="book-introduction">{{ book.introduction }}</p>
+            </mu-td>
+            <mu-td class="movie-rating">{{ book.price }}元</mu-td>
+            <mu-td>
+              <mu-raised-button class="detail_color" @click="showDetail(book._id)" label="详细" />
+              <mu-raised-button @click="openEditBookModal(book)" label="修改" primary/>
+              <mu-raised-button @click="removeBook(book)" label="删除" secondary/>
+            </mu-td>
+          </mu-tr>
+        </mu-tbody>
 
-      <mu-tbody v-else>
-        <mu-tr v-for="book in books" :key="book.id">
-          <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
-          <mu-td>{{ book.title }}</mu-td>
-          <mu-td class="movie-rating">{{ book.author }}</mu-td>
-          <mu-td>
-            <p class="book-introduction">{{ book.introduction }}</p>
-          </mu-td>
-          <mu-td class="movie-rating">{{ book.price }}元</mu-td>
-          <mu-td>
-            <mu-raised-button class="detail_color" @click="showDetail(book._id)" label="详细" />
-            <mu-raised-button @click="openEditBookModal(book)" label="修改" primary/>
-            <mu-raised-button @click="removeBook(book)" label="删除" secondary/>
-          </mu-td>
-        </mu-tr>
-      </mu-tbody>
-
-    </mu-table>
+      </mu-table>
 
     </div>
 
@@ -142,7 +158,7 @@
 
     <!-- 分页 -->
     <template>
-      <mu-pagination :total="total" :current="current" :pageSize="pageSize" @pageChange="handleClick">
+      <mu-pagination :total="total" :current="current" :pageSize="pageSize" @pageChange="handleClick" v-show="showpage">
       </mu-pagination>
     </template>
 
@@ -152,7 +168,6 @@
 
 
 <script>
-
 import { mapActions } from "vuex";
 
 export default {
@@ -182,7 +197,11 @@ export default {
       current: 1,
       pageSize: 3,
       loading: false,
-      search:""
+      search: "",
+      showbook: false,
+      showpage: false,
+      showsearch: false,
+      searchbook: []
       //progress: false
       //islogin: false
     };
@@ -224,8 +243,6 @@ export default {
     }*/
   },
   methods: {
- 
-
     //注销
     ...mapActions(["Logout"]),
     logout() {
@@ -262,6 +279,9 @@ export default {
           //console.log(res.data.total)
           this.isLoaingData = false;
           this.loading = false;
+          this.showbook = true;
+          this.showpage = true;
+          this.showsearch = false;
         })
         .catch(err => {
           this.toastr.error(`${err.message}`, "ERROR!");
@@ -420,13 +440,27 @@ export default {
 
     //搜索功能 （2018-1-31）
     searchClick() {
-      this.$http.get("/api/booksearch?search="+this.search)
-      .then(res => {
-        console.log(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      if (this.search == "") {
+      } else {
+        this.$http
+          .get("/api/booksearch?search=" + this.search)
+          .then(res => {
+            this.searchbook = res.data.allbook;
+            this.showbook = false;
+            this.showsearch = true;
+            this.showpage = false;
+            console.log(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    //如果input没输入的时候获取显示列表
+    inputbook(ev) {
+      if (this.search === "") this.showbook = true;
+      this.showsearch = false;
+      this.showpage = true;
     }
   }
 };
