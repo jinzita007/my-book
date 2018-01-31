@@ -16,14 +16,25 @@
 
   <div class="list" v-else>
     <br>
-    <div class="demo-search">
+    <!--<div class="demo-search">-->
       <!-- 添加书籍按钮 -->
-      <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
+      <!--<mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
       <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" />
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
-    </div>
+    </div>-->
 
+     <div class="demo-search">
+      <!-- 添加书籍按钮 -->
+      <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
+      <!-- 搜索功能 -->
+      <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" />
+      <mu-raised-button @click="searchClick" label="搜索" style="margin-left: 20px;" primary/>
+      <!-- 注销功能 -->
+      <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
+      <br>
+    </div>
+    <div class="main-ok">
     <!-- 书籍列表 -->
     <mu-table :fixedHeader="true" :showCheckbox="false">
       <mu-thead>
@@ -37,8 +48,22 @@
         </mu-tr>
       </mu-thead>
 
-      <mu-tbody>
-        <mu-tr v-for="book in filteredBooks" :key="book.id">
+      <div class="loading" v-if="loading">
+    <div class="ball-spin-fade-loader">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+
+      <mu-tbody v-else>
+        <mu-tr v-for="book in books" :key="book.id">
           <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
           <mu-td>{{ book.title }}</mu-td>
           <mu-td class="movie-rating">{{ book.author }}</mu-td>
@@ -55,6 +80,8 @@
       </mu-tbody>
 
     </mu-table>
+
+    </div>
 
     <!-- 添加书籍表单 -->
     <vodal :show="addBookModal" animation="slideDown" :width="500" :height="800" :closeButton="false">
@@ -113,11 +140,19 @@
       </div>
     </vodal>
 
+    <!-- 分页 -->
+    <template>
+      <mu-pagination :total="total" :current="current" :pageSize="pageSize" @pageChange="handleClick">
+      </mu-pagination>
+    </template>
+
   </div>
+
 </template>
 
 
 <script>
+
 import { mapActions } from "vuex";
 
 export default {
@@ -142,7 +177,13 @@ export default {
       msg: "",
       addBookModal: false,
       editBookModal: false,
-      isLoaingData: true
+      isLoaingData: true,
+      total: 0,
+      current: 1,
+      pageSize: 3,
+      loading: false,
+      search:""
+      //progress: false
       //islogin: false
     };
   },
@@ -175,14 +216,16 @@ export default {
   },
 
   computed: {
-    filteredBooks() {
+    /*filteredBooks() {
       var self = this;
       return this.books.filter(book => {
         return book.title.toLowerCase().indexOf(self.search.toLowerCase()) > -1;
       });
-    }
+    }*/
   },
   methods: {
+ 
+
     //注销
     ...mapActions(["Logout"]),
     logout() {
@@ -204,19 +247,34 @@ export default {
     },
     //获取所有书籍方法
     getBooks() {
-      setTimeout(() => {
-        this.$http
-          .get("/api/book")
-          .then(res => {
-            console.dir(res.data);
-            this.books = res.data;
-            this.isLoaingData = false;
-          })
-          .catch(err => {
-            this.toastr.error(`${err.message}`, "ERROR!");
-            console.log(err);
-          });
-      }, 1000);
+      //setTimeout(() => {
+      this.$http
+        .get("/api/booksquery", {
+          params: {
+            page: this.current,
+            limit: this.pageSize
+          }
+        })
+        .then(res => {
+          console.dir(res.data);
+          this.books = res.data.books;
+          this.total = res.data.total;
+          //console.log(res.data.total)
+          this.isLoaingData = false;
+          this.loading = false;
+        })
+        .catch(err => {
+          this.toastr.error(`${err.message}`, "ERROR!");
+          console.log(err);
+        });
+      // }, 1000);
+    },
+
+    //分页
+    handleClick(newIndex) {
+      this.loading = true;
+      this.current = newIndex;
+      this.getBooks();
     },
 
     // 打开添加书籍modal的方法
@@ -358,6 +416,17 @@ export default {
         return;
       }
       this.tags.pop();
+    },
+
+    //搜索功能 （2018-1-31）
+    searchClick() {
+      this.$http.get("/api/booksearch?search="+this.search)
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }
 };
@@ -447,39 +516,6 @@ export default {
   background-color: rgb(1, 73, 206);
 }
 
-/* 标签TAG样式 */
-/*.tags-wrap {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  overflow: hidden;
-  padding-left: 4px;
-  padding-top: 4px;
-  cursor: text;
-  text-align: left;
-  -webkit-appearance: textfield;
-}
-
-.tags-wrap::after {
-  content: "";
-  display: block;
-  height: 0;
-  clear: both;
-}*/
-
-/*.tags-input {
-  background: transparent;
-  border: 0;
-  color: #777;
-  font-size: 13px;
-  font-weight: 400;
-  margin-bottom: 6px;
-  margin-top: 1px;
-  outline: none;
-  padding: 4px;
-  padding-left: 0;
-  width: 80px;
-}*/
-
 .content {
   background-color: #e0e0e0;
   border-radius: 8px;
@@ -497,6 +533,9 @@ export default {
   cursor: pointer;
   font-weight: 700;
   color: #1f1f1f;
+}
+.main-ok {
+  height: 460px;
 }
 </style>
 
