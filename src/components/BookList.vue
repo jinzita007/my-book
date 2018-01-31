@@ -28,13 +28,21 @@
       <!-- 添加书籍按钮 -->
       <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
       <!-- 搜索功能 -->
-      <mu-auto-complete hintText="请随便输入点啥" @input="handleInput" :dataSource="dataSource" @change="handlechange" v-model="search" />
-      <!--<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/>-->
+      <mu-auto-complete filter="noFilter" hintText="请随便输入点啥" @input="handleInput" :dataSource="dataSource" v-model="search" />
+      <!--<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" @input="inputbook"/>-->
       <mu-raised-button @click="searchClick" label="搜索" style="margin-left: 20px;" primary/>
       <!-- 注销功能 -->
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
     </div>
+<!--div class="demo-infinite-container" v-show="active">
+    <mu-list>
+      <template v-for="value in dataSource">
+        <mu-list-item :title="value.text" @click="handlechange(value)"/>
+        <mu-divider/>
+      </template>
+    </mu-list>
+</div>-->
 
     <div :class="{mainok: isMain}">
       <!-- 书籍列表 -->
@@ -206,7 +214,9 @@ export default {
       showsearch: false,
       searchbook: [],
       isMain: true,
-      dataSource: []
+      dataSource: [],
+      showselect: false,
+      active: false,
       //progress: false
       //islogin: false
     };
@@ -461,7 +471,7 @@ export default {
         });
     },
     //如果input没输入的时候获取显示列表
-    /*inputbook(ev) {
+    /*inputbook(vaalue) {
       if (this.search === "") {
         this.showbook = true;
         this.showsearch = false;
@@ -474,21 +484,23 @@ export default {
             //const array = res.data.allbook;
             //var arrByname = [];//声明一个空数组来存放数据
             this.searchlist = res.data.allbook;
-            /*for (let index = 0; index < array.length; index++) {
-              if (array[index].search(this.search) != -1) {
-                arrByname.push(this.searchlist[index])
-                console.log(array[index])
-              }
-            }*/
-    /* })
+            var datas = [];
+            for (var key in res.data.allbook) {
+              datas.push({
+                text: res.data.allbook[key].title
+              });
+            }
+            this.active = true;
+            this.dataSource = datas;
+          })
           .catch(err => {
             console.log(err);
           });
       }
     },*/
-    handlechange(value) {
-      console.log(`you choose ${value}`);
-    },
+    //handlechange(value) {
+      //console.log(`you choose ${value}`);
+   // },
     handleInput(value) {
       if (this.search === "") {
         this.showbook = true;
@@ -505,13 +517,15 @@ export default {
           .then(res => {
             var datas = [];
             for (var key in res.data.allbook) {
-              datas.push({
-                text: res.data.allbook[key].title
-              });
+            datas.push({
+              text: res.data.allbook[key].title
+            })
+            console.log(res.data.allbook[key].title)
             }
-
-            this.dataSource = datas;
-          })
+            
+            this.active = false
+            this.dataSource = datas
+            }) 
           .catch(err => {
             console.log(err);
           });
@@ -628,6 +642,15 @@ export default {
 }
 .search-main {
   margin: 0 auto;
+  width: 256px;
+  height: 300px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #d9d9d9;
+}
+
+.demo-infinite-container{
+  margin:0 auto;
   width: 256px;
   height: 300px;
   overflow: auto;
