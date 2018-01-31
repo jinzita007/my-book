@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 
 const app = express()
+const port = process.env.PORT || 3000
 const index = require('./router/index')
 const book = require('./router/book')
 const user = require('./router/user')
@@ -31,9 +32,8 @@ app.use('/', index)
 app.use('/api', book)
 app.use('/api', user)
 // 开启监听服务
-app.listen(3000,() => {
-    console.log('app listening on port 3000.')
-    
+app.listen(port, () => {
+    console.log(`listening on port ${port}`)
 })
 
 module.exports = app
