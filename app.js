@@ -9,17 +9,17 @@ const index = require('./router/index')
 const book = require('./router/book')
 const user = require('./router/user')
 // mongoose设置
-mongoose.connect(config.mongodb)
+mongoose.connect(config.mongodb,{useMongoClient: true})
 mongoose.Promise = global.Promise
 // session会话
 app.use(session({
-    secret: 'usersession',
-    key: 'usersession',
+    secret: 'session',
+    key: 'session',
     resave: false, // //重新保存
     saveUninitialized: true, // 强制“未初始化”的会话保存到存储
     cookie: {
-        maxAge: 50000 // 设置返回的cookie时效为30秒
-    }
+        maxAge: 100000000000000000 // 设置返回的cookie时效为30秒
+    }    
 }))
 
 // URL请求解析
