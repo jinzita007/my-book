@@ -53,15 +53,59 @@ router.get('/books', (req, res) => {
         })
 
 })
+//搜索
+router.get('/booksearch', (req, res) => {
+
+    const searchString = req.query.search;
+    const regex = new RegExp(escapeRegex(searchString), 'gi');
+    /*const fullTextSearchOptions = {
+        "$text": {
+            "$search": searchString
+        }
+    }
+     Book.find(fullTextSearchOptions, (err, allbook) => {
+        if (err) {
+            res.json(err)
+        } else {
+            if (allbook.length < 1) {
+                res.json({ success: false, message: '失败查询！' });
+            } else {
+                res.json({ success: true, message: '成功查询！', allbook })
+            }
+        }
+    })*/
+    const regexSearchOptions = {
+        $or: [
+            { "title": { "$regex": regex } },
+            { "author": { "$regex": regex } },
+            { "introduction": { "$regex": regex } }
+        ]
+    }
+
+    Book.find(regexSearchOptions, (err, allbook) => {
+
+        if (err) {
+            res.json(err)
+        } else {
+            if (allbook.length < 1) {
+                res.json({ success: false, message: '失败查询！' });
+            } else {
+                res.json({ success: true, message: '成功查询！', allbook })
+            }
+        }
+
+    })
+})
 //查询分页
 router.get('/booksquery', (req, res) => {
 
     var page = parseInt(req.query.page) || 0; //for next page pass 1 here
     var limit = parseInt(req.query.limit) || 3;
+    var searchString = req.query.search;
     var query = {};
-    Book.find(query)
+    Book.find({ $text: { $search: searchString } })
         .sort({ update_at: -1 })
-        .skip(page * limit) //Notice here
+        .skip((page - 1) * limit) //Notice here
         .limit(limit)
         .exec((err, doc) => {
             if (err) {
@@ -71,7 +115,12 @@ router.get('/booksquery', (req, res) => {
                 if (err) {
                     return res.json(count_error);
                 }
-                return res.json({ total: count, books: doc });
+                return res.json({
+                    total: count,
+                    page: page,
+                    pageSize: doc.length,
+                    books: doc
+                });
             });
         });
 })
@@ -155,4 +204,6 @@ function escapeRegex(text) {
 };
 
 module.exports = router
+
+
 
