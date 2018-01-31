@@ -34,7 +34,7 @@
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
     </div>
-    <div class="main-ok">
+    <div :class="{mainok: isMain}">
       <!-- 书籍列表 -->
       <mu-table :fixedHeader="true" :showCheckbox="false">
         <mu-thead>
@@ -77,7 +77,7 @@
             </mu-td>
           </mu-tr>
         </mu-tbody>
-        <!-- 搜索列表 -->
+        <!-- 搜索图书列表 -->
         <mu-tbody v-show="showsearch">
           <mu-tr v-for="book in searchbook" :key="book.id">
             <mu-td><img class="book-poster" :src="book.img_url"></mu-td>
@@ -201,7 +201,8 @@ export default {
       showbook: false,
       showpage: false,
       showsearch: false,
-      searchbook: []
+      searchbook: [],
+      isMain: true
       //progress: false
       //islogin: false
     };
@@ -282,6 +283,7 @@ export default {
           this.showbook = true;
           this.showpage = true;
           this.showsearch = false;
+          this.isMain = true;
         })
         .catch(err => {
           this.toastr.error(`${err.message}`, "ERROR!");
@@ -449,6 +451,7 @@ export default {
             this.showbook = false;
             this.showsearch = true;
             this.showpage = false;
+            this.isMain = false;
             console.log(res.data);
           })
           .catch(err => {
@@ -461,6 +464,7 @@ export default {
       if (this.search === "") this.showbook = true;
       this.showsearch = false;
       this.showpage = true;
+      this.isMain = true;
     }
   }
 };
@@ -568,7 +572,7 @@ export default {
   font-weight: 700;
   color: #1f1f1f;
 }
-.main-ok {
+.mainok {
   height: 460px;
 }
 </style>
