@@ -28,12 +28,14 @@
       <!-- 添加书籍按钮 -->
       <mu-raised-button class="detail_color" @click="openAddBookModal" label="新增" style="margin-right: 20px;" />
       <!-- 搜索功能 -->
-      <mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search" v-on:input="inputbook($event)" />
+      <mu-auto-complete hintText="请随便输入点啥" @input="handleInput" :dataSource="dataSource" @change="handlechange" v-model="search" />
+      <!--<mu-text-field icon="search" class="appbar-search-field" slot="right" hintText="搜索书名" v-model="search"/>-->
       <mu-raised-button @click="searchClick" label="搜索" style="margin-left: 20px;" primary/>
       <!-- 注销功能 -->
       <mu-raised-button @click="logout" label="注销" style="margin-left: 20px;" primary/>
       <br>
     </div>
+
     <div :class="{mainok: isMain}">
       <!-- 书籍列表 -->
       <mu-table :fixedHeader="true" :showCheckbox="false">
@@ -120,8 +122,10 @@
       <mu-text-field v-model="everage" fullWidth icon="attach_money" label="评分" labelFloat/><br/>
       <mu-text-field v-model="introduction" multiLine :rows="2" :rowsMax="6" fullWidth icon="description" label="简介" labelFloat/><br/>
       <p style="color:red">{{msg.message}}</p>
-      <mu-raised-button @click="closeModal" label="取消" icon="undo" />
-      <mu-raised-button @click="addMovie" label="确定" icon="check" primary/>
+      <div class="demo-button">
+        <mu-raised-button @click="closeModal" label="取消" icon="undo" />
+        <mu-raised-button @click="addMovie" label="确定" icon="check" primary/>
+      </div>
     </vodal>
 
     <!--编辑书籍表单-->
@@ -140,7 +144,7 @@
           <div><hr class="mu-text-field-line"> <hr class="mu-text-field-focus-line"></div>
         </div>
       </div>
-      <!-- 测试专用的 -->
+      <!-- 测试标签TAG -->
       <!--<div class="form-group">
        <label for="">Tags:</label>
        <code>{{tags}}</code>
@@ -184,7 +188,6 @@ export default {
       price: "",
       introduction: "",
       img_url: "",
-      search: "",
       books: [],
       newTag: "",
       tags: [],
@@ -202,7 +205,8 @@ export default {
       showpage: false,
       showsearch: false,
       searchbook: [],
-      isMain: true
+      isMain: true,
+      dataSource: []
       //progress: false
       //islogin: false
     };
@@ -442,29 +446,76 @@ export default {
 
     //搜索功能 （2018-1-31）
     searchClick() {
-      if (this.search == "") {
+      this.$http
+        .get("/api/booksearch?search=" + this.search)
+        .then(res => {
+          this.searchbook = res.data.allbook;
+          this.showbook = false;
+          this.showsearch = true;
+          this.showpage = false;
+          this.isMain = false;
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //如果input没输入的时候获取显示列表
+    /*inputbook(ev) {
+      if (this.search === "") {
+        this.showbook = true;
+        this.showsearch = false;
+        this.showpage = true;
+        this.isMain = true;
       } else {
         this.$http
           .get("/api/booksearch?search=" + this.search)
           .then(res => {
-            this.searchbook = res.data.allbook;
-            this.showbook = false;
-            this.showsearch = true;
-            this.showpage = false;
-            this.isMain = false;
-            console.log(res.data);
+            //const array = res.data.allbook;
+            //var arrByname = [];//声明一个空数组来存放数据
+            this.searchlist = res.data.allbook;
+            /*for (let index = 0; index < array.length; index++) {
+              if (array[index].search(this.search) != -1) {
+                arrByname.push(this.searchlist[index])
+                console.log(array[index])
+              }
+            }*/
+    /* })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },*/
+    handlechange(value) {
+      console.log(`you choose ${value}`);
+    },
+    handleInput(value) {
+      if (this.search === "") {
+        this.showbook = true;
+        this.showsearch = false;
+        this.showpage = true;
+        this.isMain = true;
+      } else {
+        this.$http
+          .get("/api/booksearch", {
+            params: {
+              search: value
+            }
+          })
+          .then(res => {
+            var datas = [];
+            for (var key in res.data.allbook) {
+              datas.push({
+                text: res.data.allbook[key].title
+              });
+            }
+
+            this.dataSource = datas;
           })
           .catch(err => {
             console.log(err);
           });
       }
-    },
-    //如果input没输入的时候获取显示列表
-    inputbook(ev) {
-      if (this.search === "") this.showbook = true;
-      this.showsearch = false;
-      this.showpage = true;
-      this.isMain = true;
     }
   }
 };
@@ -574,6 +625,14 @@ export default {
 }
 .mainok {
   height: 460px;
+}
+.search-main {
+  margin: 0 auto;
+  width: 256px;
+  height: 300px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #d9d9d9;
 }
 </style>
 
