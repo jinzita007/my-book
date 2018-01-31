@@ -101,9 +101,8 @@ router.get('/booksquery', (req, res) => {
 
     var page = parseInt(req.query.page) || 0; //for next page pass 1 here
     var limit = parseInt(req.query.limit) || 3;
-    var searchString = req.query.search;
     var query = {};
-    Book.find({ $text: { $search: searchString } })
+    Book.find(query)
         .sort({ update_at: -1 })
         .skip((page - 1) * limit) //Notice here
         .limit(limit)
