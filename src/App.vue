@@ -15,9 +15,6 @@
 <script>
 
 export default {
-  /*created(){
-    
-  },*/
   data(){
     return {
       title: '羽翼图书',

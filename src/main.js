@@ -8,12 +8,10 @@ import './assets/icon.css'
 import toastr from 'toastr'
 import 'toastr/build/toastr.min.css'
 import Vodal from 'vodal';
-// include animation styles
 import "vodal/common.css";
 import "vodal/rotate.css";
 import "./assets/loaders.css"
 axios.defaults.withCredentials = true
-//import axios from './util/axios.js'
 Vue.use(MuseUi)
 import router from './router'
 import axios from 'axios'
@@ -44,10 +42,7 @@ toastr.options = {
 
 /* eslint-disable no-new */
 new Vue({
-  /*el: '#app',*/
   router,
   store,
-  /*template: '<App/>',
-  components: { App }*/
   render: h => h(App)
 }).$mount('#app')
